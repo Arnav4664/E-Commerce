@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        User Management
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+
+        <h2>Users</h2>
+        <div id="file-list">
+            {% if users %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user['user_email'] }}</td>
+                        <td>{{ user['user_name'] }}</td>
+                        <td>{{ user['user_phone'] }}</td>
+                        <td>{{ user['user_address'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No users found.</p>
+            {% endif %}
+        </div>
+
+        <a href="/">Back to Home</a>
+
+    </div>
+
+</body>
+</html>

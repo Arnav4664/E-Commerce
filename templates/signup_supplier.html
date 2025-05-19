@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Signup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+    <style>
+        .container {
+            max-width: 450px;
+            font-weight: 600;
+            margin: 2rem auto 0 auto;
+        }
+    
+        label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            resize: none;
+        }
+        
+        .error {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #457b9d;
+            text-decoration: none;
+        }
+        
+        
+        .navbar {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            color: #f8f8f8;
+            text-decoration: none;
+            font-size: 1.5rem;
+            margin-right: auto;
+            padding-left: 1rem;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+<body>
+
+<div class="navbar">
+    <a href="/" class="back-link">Dashboard</a>
+</div>
+
+    <div class="container">
+        <h2>Sign Up as Supplier</h2>
+        
+        <!-- Error Message -->
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        
+        <!-- Signup Form -->
+        <form id="signupForm" action="/signup/supplier" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required minlength="3">
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required minlength="2">
+
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required maxlength="10">
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="4" ></textarea>
+
+            <button type="submit">Sign Up</button>
+        </form>
+        
+        <!-- Login Link -->
+        <div class="login-link">
+            Already have an account? <a href="/login/supplier">Login here</a>
+        </div>
+    </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.getElementById('phone');
+    const signupForm = document.getElementById('signupForm');
+    
+    // Restrict phone input to numbers only
+    phoneInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    
+    // Prevent pasting non-numeric content into phone field
+    phoneInput.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData('text/plain').replace(/[^0-9]/g, '');
+        document.execCommand('insertText', false, pasteData);
+    });
+    
+    // Form validation
+    signupForm.addEventListener('submit', function(e) {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{10}$/;
+        
+        // Clear previous error messages
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
+        
+        // Email validation
+        if (!emailRegex.test(email)) {
+            showError('email', 'Please enter a valid email address.');
+            e.preventDefault();
+            return;
+        }
+
+        // Password validation
+        if (password.length < 3) {
+            showError('password', 'Password must be at least 3 characters long.');
+            e.preventDefault();
+            return;
+        }
+
+        // Name validation
+        if (name.length < 2) {
+            showError('name', 'Name must be at least 2 characters long.');
+            e.preventDefault();
+            return;
+        }
+
+        // Phone validation
+        if (!phoneRegex.test(phone)) {
+            showError('phone', 'Phone number must be exactly 10 digits.');
+            e.preventDefault();
+            return;
+        }
+
+    });
+    
+    // Helper function to show error messages
+    function showError(fieldId, message) {
+        const field = document.getElementById(fieldId);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.color = 'red';
+        errorDiv.style.fontSize = '0.8rem';
+        errorDiv.style.marginTop = '-0.5rem';
+        errorDiv.style.marginBottom = '0.5rem';
+        errorDiv.textContent = message;
+        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+    }
+});
+</script>
+
+</body>
+</html>

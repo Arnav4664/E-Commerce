@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping System - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        Welcome to ShopEase Marketplace
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h2>Dashboard</h2>
+        <nav>
+            <a href="/login/user">Login as User</a> 
+            <a href="/login/supplier">Login as Supplier</a> 
+            <a href="/signup/user">Sign Up as User</a> 
+            <a href="/signup/supplier">Sign Up as Supplier</a>
+        </nav>
+    </div>
+
+</body>
+</html>

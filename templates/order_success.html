@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            padding-top: 20px;
+        }
+        .container {
+            padding: 20px;
+        }
+        .success-message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2a6a7e;
+        }
+        .continue-shopping {
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+            background-color: #457b9d;
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+        .continue-shopping:hover {
+            background-color: #2a6a7e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="success-message">Order Placed Successfully!</h1>
+        <p>Order ID: {{ order_id }}</p>
+        <p>Thank you for shopping with us.</p>
+        <a href="{{ url_for('products') }}" class="continue-shopping">Continue Shopping</a>
+    </div>
+
+</body>
+</html>

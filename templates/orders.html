@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .container {
+            padding: 20px;
+            max-width: 700px;
+            margin-top: 50px;
+        }
+        .page-title {
+            text-align: center;
+            color: #2a6a7e;
+            margin-bottom: 30px;
+        }
+        .order-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .order-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #457b9d;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .detail-group {
+            margin-bottom: 10px;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            color: #333;
+        }
+        .no-orders {
+            font-size: 1.1rem;
+            color: #666;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .back-home {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #457b9d;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            width: fit-content;
+            margin: 30px auto 0;
+        }
+        .back-home:hover {
+            background-color: #2a6a7e;
+        }
+    </style>
+</head>
+<div class="navbar">Your Order History</div>
+<body>
+    <div class="container">
+        
+        {% if orders %}
+            {# Calculate total number of orders for descending numbering #}
+            {% set total_orders = orders|length %}
+            
+            {% for order in orders %}
+            <div class="order-card">
+                {# Show order numbers in descending order (total_orders - loop.index0) #}
+                <h2 class="order-title">Order #{{ total_orders - loop.index0 }}</h2>
+                
+                <div class="order-details">
+                    <div class="detail-group">
+                        <span class="detail-label">Order ID</span>
+                        <span class="detail-value">{{ order.order_id }}</span>
+                    </div>
+                    
+                    <div class="detail-group">
+                        <span class="detail-label">Date Placed</span>
+                        <span class="detail-value">{{ order.order_date.strftime('%d %b %Y, %I:%M %p') }}</span>
+                    </div>
+                    
+                    <div class="detail-group">
+                        <span class="detail-label">Total Amount</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(order.total_amount) }}</span>
+                    </div>
+                    
+                    <div class="detail-group">
+                        <span class="detail-label">Shipping Address</span>
+                        <span class="detail-value">{{ order.shipping_address }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-orders">
+                <p>You haven't placed any orders yet.</p>
+            </div>
+        {% endif %}
+        
+        <a href="{{ url_for('products') }}" class="back-home">Continue Shopping</a>
+    </div>
+</body>
+</html>

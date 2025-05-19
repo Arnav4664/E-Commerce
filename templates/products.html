@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEase - Products</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+  font-family: 'Roboto', sans-serif; 
+  line-height: 1.6; 
+  background-color: #f8f9fa; 
+  color: #333; 
+}
+
+/* Layout */
+.container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+.main-container { padding: 2rem 0; }
+
+/* Navbar */
+.navbar {
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.navbar h1 { margin: 0; font-size: 1.5rem; font-weight: 600; }
+.navbar .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.navbar a { 
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  position: relative;
+}
+.navbar a:hover { opacity: 0.9; }
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: #e63946;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 0.2rem 0.4rem;
+}
+
+/* Filter Section */
+.filter-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+.filter-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+.filter-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.filter-group label { font-weight: 500; color: #6c757d; font-size: 0.9rem; }
+.filter-group select, .search-bar input {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.95rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+.filter-group select:focus, .search-bar input:focus {
+  outline: none;
+  border-color: #457b9d;
+  box-shadow: 0 0 0 2px rgba(69, 123, 157, 0.2);
+}
+.search-container { display: flex; flex-direction: column; gap: 0.5rem; }
+.search-bar { display: flex; width: 100%; }
+.search-bar input { 
+  border-top-right-radius: 0; 
+  border-bottom-right-radius: 0; 
+  border-right: none; 
+}
+.search-bar button {
+  background-color: #457b9d;
+  color: white;
+  border: none;
+  padding: 0 1.5rem;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-bar button:hover { background-color: #1e5065; }
+.filter-btn {
+  background-color: #457b9d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  width: 100%;
+  height: 42px;
+}
+.filter-btn:hover { background-color: #1e5065; }
+
+/* Products */
+.products-container { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+  gap: 1.5rem; 
+}
+
+/* Product Card */
+.product-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.product-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); 
+}
+.product-image-container {
+  height: 220px;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: relative;
+}
+.product-card img { 
+  max-width: 100%; 
+  max-height: 100%; 
+  object-fit: contain; 
+  mix-blend-mode: multiply; 
+}
+.product-content { padding: 1.5rem; display: flex; flex-direction: column; flex-grow: 1; }
+.product-card h3 { 
+  font-size: 1.2rem; 
+  color: #333; 
+  margin-bottom: 0.5rem; 
+  font-weight: 600; 
+}
+.description { 
+  font-size: 0.9rem; 
+  color: #6c757d; 
+  margin-bottom: 1rem; 
+  flex-grow: 1; 
+}
+.product-meta { 
+  display: flex; 
+  justify-content: space-between; 
+  font-size: 0.85rem; 
+  color: #6c757d; 
+  margin-bottom: 0.5rem; 
+}
+.price { 
+  font-weight: 700; 
+  color: #457b9d; 
+  font-size: 1.3rem; 
+  margin: 0.5rem 0 1rem; 
+}
+.stock-status {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.stock-status.out-of-stock { background-color: #e63946; }
+.stock-status.low-stock { background-color: #ff9800; }
+
+/* Quantity Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.controls button {
+  background-color: #457b9d;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.controls button:hover { background-color: #1e5065; }
+.controls button:disabled { background-color: #cccccc; cursor: not-allowed; }
+.controls span { 
+  font-size: 1rem; 
+  font-weight: 600; 
+  color: #333; 
+  width: 40px; 
+  text-align: center; 
+}
+
+/* Buttons */
+.add-to-cart {
+  background-color: #1e5065;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+.add-to-cart:hover { background-color: #164257; }
+.add-to-cart:disabled { background-color: #cccccc; cursor: not-allowed; }
+.out-of-stock-btn { background-color: #e63946 !important; }
+
+/* Messages */
+.error-message {
+  color: #e63946;
+  text-align: center;
+  margin: 2rem 0;
+  font-weight: 500;
+  padding: 1rem;
+  background-color: rgba(230, 57, 70, 0.1);
+  border-radius: 8px;
+}
+.empty-state { 
+  text-align: center; 
+  padding: 3rem; 
+  color: #6c757d; 
+  grid-column: 1 / -1; 
+}
+
+/* Notification */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transform: translateX(200%);
+  transition: transform 0.3s ease;
+}
+.notification.show {
+  transform: translateX(0);
+}
+.notification.error {
+  background-color: #e63946;
+}
+</style>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>ShopEase Marketplace</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('past_orders') }}">Past Orders</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('view_cart') }}">
+                🛒 Cart
+                {% if cart_count > 0 %}
+                <span class="cart-count">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <div class="container main-container">
+        <!-- Combined Filter and Search Section -->
+        <div class="filter-section">
+            <form method="GET" action="{{ url_for('products') }}" class="filter-form">
+                <!-- Category Filter -->
+                <div class="filter-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}" {% if selected_category==category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <!-- Price Sort Filter -->
+                <div class="filter-group">
+                    <label for="sort">Sort by</label>
+                    <select id="sort" name="sort">
+                        <option value="">Default</option>
+                        <option value="price_asc" {% if sort_order=='price_asc' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="price_desc" {% if sort_order=='price_desc' %}selected{% endif %}>Price: High to Low</option>
+                    </select>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <label for="search">Search Products</label>
+                    <div class="search-bar">
+                        <input type="text" id="search" name="search" placeholder="Search products..." value="{{ search_query or '' }}">
+                        <button type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-btn-container">
+                    <button type="submit" class="filter-btn">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Products Section -->
+        {% if error %}
+        <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <div class="products-container">
+            {% if products and products|length > 0 %}
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img src="{{ product.product_image }}" alt="{{ product.product_name }}">
+                        {% if product.stock == 0 %}
+                            <span class="stock-status out-of-stock">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-content">
+                        <h3>{{ product.product_name }}</h3>
+                        <p class="description">{{ product.description }}</p>
+                        
+                        <div class="product-meta">
+                            <span class="category">{{ product.category }}</span>
+                            <span>Supplier: {{ product.supplier_name }}</span>
+                        </div>
+                        
+                        <p class="price">₹{{ product.price }}</p>
+
+                        <form class="cart-form" method="POST" data-product-id="{{ product.product_name }}">
+                            <input type="hidden" name="product_name" value="{{ product.product_name }}">
+                            <input type="hidden" name="restock_quantity" value="{{ product.stock }}">
+
+                            {% if product.quantity == 0 %}
+                                {% if product.stock == 0 %}
+                                    <button class="add-to-cart out-of-stock-btn" disabled>Out of Stock</button>
+                                {% else %}
+                                    <button class="add-to-cart" type="submit" name="action" value="add">Add to Cart</button>
+                                {% endif %}
+                            {% else %}
+                                <div class="controls">
+                                    <button type="submit" name="action" value="decrease">-</button>
+                                    <span class="quantity-display">{{ product.quantity }}</span>
+                                    <button type="submit" name="action" value="increase" 
+                                        {% if product.quantity >= product.stock %}disabled{% endif %}>+</button>
+                                </div>
+                                {% if product.quantity >= product.stock %}
+                                    <p style="color: var(--secondary-color); font-size: 0.8rem; text-align: center; margin-top: -0.5rem;">
+                                        Maximum quantity reached
+                                    </p>
+                                {% endif %}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>No products found</h3>
+                    <p>Try adjusting your search or filter criteria</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show notification function
+    function showNotification(message, isError = false) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'notification';
+        notification.classList.add(isError ? 'error' : 'show');
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    // Update cart count in navbar
+    function updateCartCount(count) {
+        const cartCountElement = document.querySelector('.cart-count');
+        const cartLink = document.querySelector('.nav-links a[href*="cart"]');
+        
+        if (count > 0) {
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            } else {
+                const newCartCount = document.createElement('span');
+                newCartCount.className = 'cart-count';
+                newCartCount.textContent = count;
+                cartLink.appendChild(newCartCount);
+            }
+        } else if (cartCountElement) {
+            cartCountElement.remove();
+        }
+    }
+
+    // Handle cart form submissions with AJAX
+    document.querySelectorAll('.cart-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const productId = this.dataset.productId;
+            const clickedButton = document.activeElement;
+            const action = clickedButton.value;
+            formData.append('action', action);
+            // Get the current quantity display element
+            const quantityDisplay = this.querySelector('.quantity-display');
+            const addToCartBtn = this.querySelector('.add-to-cart:not(.out-of-stock-btn)');
+            const controlsDiv = this.querySelector('.controls');
+            
+            fetch('/cart', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI based on action
+                    if (action === 'add') {
+                        // Hide "Add to Cart" button and show quantity controls
+                        if (addToCartBtn) addToCartBtn.style.display = 'none';
+                        
+                        // Create controls if they don't exist
+                        if (!controlsDiv) {
+                            const controls = document.createElement('div');
+                            controls.className = 'controls';
+                            
+                            const decreaseBtn = document.createElement('button');
+                            decreaseBtn.type = 'submit';
+                            decreaseBtn.name = 'action';
+                            decreaseBtn.value = 'decrease';
+                            decreaseBtn.textContent = '-';
+                            
+                            const quantitySpan = document.createElement('span');
+                            quantitySpan.className = 'quantity-display';
+                            quantitySpan.textContent = '1';
+                            
+                            const increaseBtn = document.createElement('button');
+                            increaseBtn.type = 'submit';
+                            increaseBtn.name = 'action';
+                            increaseBtn.value = 'increase';
+                            increaseBtn.textContent = '+';
+                            
+                            controls.appendChild(decreaseBtn);
+                            controls.appendChild(quantitySpan);
+                            controls.appendChild(increaseBtn);
+                            
+                            // Insert controls before the add-to-cart button
+                            addToCartBtn.insertAdjacentElement('beforebegin', controls);
+                        } else {
+                            controlsDiv.style.display = 'flex';
+                            if (quantityDisplay) {
+                                quantityDisplay.textContent = '1';
+                            }
+                        }
+                    } else if (quantityDisplay) {
+                        // Update quantity display for increase/decrease
+                        const currentQuantity = parseInt(quantityDisplay.textContent);
+                        let newQuantity = currentQuantity;
+                        
+                        if (action === 'increase') {
+                            newQuantity = currentQuantity + 1;
+                        } else if (action === 'decrease') {
+                            newQuantity = currentQuantity - 1;
+                        }
+                        
+                        quantityDisplay.textContent = newQuantity;
+                        
+                        // Handle when quantity reaches 0
+                        if (newQuantity === 0) {
+                            controlsDiv.style.display = 'none';
+                            if (addToCartBtn) addToCartBtn.style.display = 'block';
+                        }
+                        
+                        // Disable increase button if max quantity reached
+                        const increaseBtn = this.querySelector('button[value="increase"]');
+                        if (increaseBtn) {
+                            const restockQuantity = parseInt(this.querySelector('input[name="restock_quantity"]').value);
+                            increaseBtn.disabled = newQuantity >= restockQuantity;
+                        }
+                    }
+                    
+                    // Update cart count
+                    updateCartCount(data.cart_count);
+                    
+                } else {
+                    // Show error notification
+                    showNotification(data.message, true);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred. Please try again.', true);
+            });
+        });
+    });
+});
+</script>
+</body>
+</html>

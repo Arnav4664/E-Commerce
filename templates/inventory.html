@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: #2a6a7e;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            background-color: #1e5065;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #143848;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        td img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;  /* Changed from 'cover' to 'contain' */
+            border-radius: 5px;
+            background-color: #f8f8f8; /* Light background for transparency */
+            padding: 5px;
+            border: 1px solid #ddd;
+            display: block;
+            margin: 0 auto; /* Center the image */
+        }
+       
+        .action-btn {
+            display: inline-block;
+            background-color: #2a6a7e;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin: 2px;
+        }
+        
+        .action-btn:hover {
+            background-color: #1e5065;
+        }
+        
+        .save-btn {
+            background-color: #4CAF50;
+        }
+        
+        .cancel-btn {
+            background-color: #f44336;
+        }
+        
+        .add-product-btn {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        input[type="text"], 
+        input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 80px;
+            text-align: center;
+        }
+        
+        .edit-input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Inventory Management</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Inventory Table -->
+    <div class="container">
+        <h2>Your Inventory</h2>
+
+        {% if inventory_items %}
+        <form id="inventoryForm" action="{{ url_for('restock_product') }}" method="POST" enctype="multipart/form-data">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Current Stock</th>
+                        <th>Price</th>
+                        <th>Last Updated</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory_items %}
+                    <tr data-product="{{ item.product_name }}">
+                        <form method="POST" action="{{ url_for('restock_product') }}" enctype="multipart/form-data">
+                            <!-- Add this hidden input for original product name -->
+                            <input type="hidden" name="original_product_name" value="{{ item.product_name }}">
+                            
+                            <td>
+                                <span class="view-mode">{{ item.product_name }}</span>
+                                <input type="text" class="edit-mode edit-input" name="product_name" 
+                                       value="{{ item.product_name }}" style="display:none;">
+                            </td>
+                            <td>
+                                <span class="view-mode">{{ item.stock }}</span>
+                                <input type="number" class="edit-mode" name="stock" 
+                                       value="{{ item.stock }}" min="0" style="display:none;">
+                            </td>
+                            <td>
+                                <span class="view-mode">₹{{ item.price }}</span>
+                                <input type="number" class="edit-mode" name="price" 
+                                       value="{{ item.price }}" min="0" step="0.01" style="display:none;">
+                            </td>
+                            <td>{{ item.restock_date }}</td>
+                            <td>
+                                <img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" 
+                                     alt="{{ item.product_name }}">
+                                <input type="file" class="edit-mode" name="image" accept="image/*" style="display:none;">
+                            </td>
+                            <td class="action-buttons">
+                                <button type="button" class="action-btn edit-btn">Edit</button>
+                                <button type="submit" class="action-btn save-btn" name="action" value="update" style="display:none;">
+                                    Save
+                                </button>
+                                <button type="button" class="action-btn cancel-btn" style="display:none;">Cancel</button>
+                                <button type="submit" class="action-btn" name="action" value="delete_full">Delete</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        {% else %}
+        <p>No inventory items found.</p>
+        {% endif %}
+
+        <!-- Add Product Button -->
+        <a href="{{ url_for('add_product') }}" class="action-btn add-product-btn">Add New Product</a>
+    </div>
+
+    <script>
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                row.querySelectorAll('.view-mode').forEach(el => el.style.display = 'none');
+                row.querySelectorAll('.edit-mode').forEach(el => el.style.display = '');
+                row.querySelector('.edit-btn').style.display = 'none';
+                row.querySelector('.save-btn').style.display = '';
+                row.querySelector('.cancel-btn').style.display = '';
+            });
+        });
+
+        document.querySelectorAll('.cancel-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                row.querySelectorAll('.view-mode').forEach(el => el.style.display = '');
+                row.querySelectorAll('.edit-mode').forEach(el => el.style.display = 'none');
+                row.querySelector('.edit-btn').style.display = '';
+                row.querySelector('.save-btn').style.display = 'none';
+                row.querySelector('.cancel-btn').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
